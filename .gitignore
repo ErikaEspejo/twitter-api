@@ -1,0 +1,5 @@
+node_modules/
+.env
+.thumbs
+.DS_Store
+logs/
