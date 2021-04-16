@@ -3,7 +3,7 @@ const dictionaryESCO = {
     notAuthorized: 'no autorizado',
     notAuthenticated: 'no autenticado',
     invalidData: 'datos inválidos',
-  }
+  },
 };
 
 module.exports = { dictionaryESCO };

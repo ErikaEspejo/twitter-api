@@ -1,3 +1,3 @@
-const tweets = []
+const tweets = [];
 
 module.exports = { tweets };
