@@ -18,7 +18,7 @@ y directamente en las variables de entorno */
 
 const logStream = fs.createWriteStream(path.join(__dirname, accessLogDir), { flags: 'a' }); // crear logs en archivos
 
-router.use(helmet);
+router.use(helmet());
 router.use(morgan('combined', { stream: logStream }));
 router.use(localization);
 

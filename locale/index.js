@@ -4,6 +4,6 @@ const { dictionaryESCO } = require('./es-CO');
 
 const locale = new Localization({ defaultLocale: 'en' });
 locale.addDict('en', dictionaryENUS);
-locale.addDict('es', dictionaryESCO);
+locale.addDict('es-CO', dictionaryESCO);
 
 module.exports = { locale };
