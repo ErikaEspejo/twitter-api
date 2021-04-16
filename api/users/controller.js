@@ -1,32 +1,41 @@
 const jwt = require('jsonwebtoken');
-
+const bcrypt = require('bcrypt');
+const { locale } = require('../../locale');
 const { config } = require('../../config');
-let { users } = require('./model');
+const User = require('./model');
 
-const list = (req, res) => {
+const list = async (req, res) => {
+  /*
+  User.find({}).then((users) => {
+    res.status(200).json(users);
+  });
+  */
+  const users = await User.find({}, ['name', 'username']);
   res.status(200).json(users);
 };
 
-const create = (req, res) => {
+const create = async (req, res) => {
   const {
     name, email, username, password,
   } = req.body; // Destructuración de las llaves - valor del request
+  const salt = bcrypt.genSaltSync(config.saltRounds);
+  const passwordHash = bcrypt.hashSync(password, salt);
 
   const user = {
     name,
     email,
     username,
-    password,
+    password: passwordHash,
   };
 
-  const found = users.filter((u) => u.username === user.username);
-  if (found && found.length > 0) {
-    /* Si se incluyen todos los datos pero se encuentra otro usuario con el mismo username,
-    manda un mensaje de que ya existe, si no lo crea. */
-    res.status(500).json({ message: 'Ya existe el usuario.' });
-  } else {
-    users.push(user);
-    res.status(201).json(users); // muestra el json del listado de usuarios.
+  const newUser = new User(user);
+  await newUser.save();
+
+  try {
+    const users = await User.find({}, ['name', 'username']);
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json({ message: err });
   }
 };
 
