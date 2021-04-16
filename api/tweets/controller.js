@@ -5,7 +5,7 @@ const list = (req, res) => {
 };
 
 const create = (req, res) => {
-  const { content, authUsername } = req.body; //Destructuración de las llaves - valor del request
+  const { content, authUsername } = req.body; // Destructuración de las llaves - valor del request
   const date = new Date().toDateString();
 
   const tweet = {
@@ -15,7 +15,7 @@ const create = (req, res) => {
   };
 
   tweets.push(tweet);
-  res.status(201).json(tweets); //muestra el json del listado de usuarios.
+  res.status(201).json(tweets); // muestra el json del listado de usuarios.
 };
 
 module.exports = { list, create };

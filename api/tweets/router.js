@@ -1,8 +1,8 @@
 const express = require('express');
 const { list, create } = require('./controller');
-const { logger } = require('./../middleware/logger');
-const { validateTweet } = require('./../middleware/validator');
-const { authenticator } = require('./../middleware/authenticator');
+const { logger } = require('../middleware/logger');
+const { validateTweet } = require('../middleware/validator');
+const { authenticator } = require('../middleware/authenticator');
 
 const router = express.Router();
 
