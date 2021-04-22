@@ -3,6 +3,9 @@ const dictionaryESCO = {
     notAuthorized: 'no autorizado',
     notAuthenticated: 'no autenticado',
     invalidData: 'datos inválidos',
+    user: {
+      userExist: 'el usuario o correo electrónico ya existe',
+    },
   },
 };
 

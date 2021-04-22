@@ -28,12 +28,19 @@ const create = async (req, res) => {
     password: passwordHash,
   };
 
+  const userFound = await User.find({ $or: [{ username }, { email }] }, ['email', 'username']);
+
+  if (userFound.length > 0) {
+    res.status(500).json({ message: locale.translate('errors.user.userExist') });
+    return;
+  }
+
   const newUser = new User(user);
   await newUser.save();
 
   try {
-    const users = await User.find({ active: true }, ['name', 'username']);
-    res.status(200).json(users);
+    const userCreated = await User.find({ $and: [{ username }, { email }, { active: true }] }, ['name', 'username', 'email']);
+    res.status(500).json(userCreated);
   } catch (err) {
     res.status(500).json({ message: err });
   }
