@@ -10,7 +10,7 @@ const list = async (req, res) => {
     res.status(200).json(users);
   });
   */
-  const users = await User.find({}, ['name', 'username']);
+  const users = await User.find({ active: true }, ['name', 'username', 'createdAt', 'updatedAt']);
   res.status(200).json(users);
 };
 
@@ -32,7 +32,7 @@ const create = async (req, res) => {
   await newUser.save();
 
   try {
-    const users = await User.find({}, ['name', 'username']);
+    const users = await User.find({ active: true }, ['name', 'username']);
     res.status(200).json(users);
   } catch (err) {
     res.status(500).json({ message: err });
