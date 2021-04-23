@@ -5,6 +5,7 @@ const dictionaryESCO = {
     invalidData: 'datos inválidos',
     user: {
       userExist: 'el usuario o correo electrónico ya existe',
+      onCreate: 'error mientras se creaba el usuario',
     },
   },
 };

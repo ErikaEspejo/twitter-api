@@ -5,6 +5,7 @@ const dictionaryENUS = {
     invalidData: 'invalid data',
     user: {
       userExist: 'user or email already exist',
+      onCreate: 'error while creating user',
     },
   },
 };

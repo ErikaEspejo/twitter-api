@@ -21,13 +21,6 @@ const create = async (req, res) => {
   const salt = bcrypt.genSaltSync(config.saltRounds);
   const passwordHash = bcrypt.hashSync(password, salt);
 
-  const user = {
-    name,
-    email,
-    username,
-    password: passwordHash,
-  };
-
   const userFound = await User.find({ $or: [{ username }, { email }] }, ['email', 'username']);
 
   if (userFound.length > 0) {
@@ -35,15 +28,17 @@ const create = async (req, res) => {
     return;
   }
 
-  const newUser = new User(user);
-  await newUser.save();
+  const user = {
+    name,
+    email,
+    username,
+    password: passwordHash,
+  };
 
-  try {
-    const userCreated = await User.find({ $and: [{ username }, { email }, { active: true }] }, ['name', 'username', 'email']);
-    res.status(500).json(userCreated);
-  } catch (err) {
-    res.status(500).json({ message: err });
-  }
+  const newUser = new User(user);
+  newUser.save().then((userCreated) => {
+    res.status(200).json(userCreated);
+  });
 };
 
 const getUser = (req, res) => {
