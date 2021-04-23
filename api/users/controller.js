@@ -5,13 +5,28 @@ const { config } = require('../../config');
 const User = require('./model');
 
 const list = async (req, res) => {
-  /*
-  User.find({}).then((users) => {
-    res.status(200).json(users);
-  });
-  */
-  const users = await User.find({ active: true }, ['name', 'username', 'createdAt', 'updatedAt']);
-  res.status(200).json(users);
+  // paginacion, hacen parte del elemento query del request
+  // Por defecto se pone que envie la primera pagina con 10 elementos, si no se pone nada
+  const { page = 1, limit = 10 } = req.query;
+  const skip = (page - 1) * limit;// el skip se salta elementos para no mostrarlos
+
+  User.find({ active: true }, ['name', 'username', 'createdAt', 'updatedAt'])
+    .limit(parseInt(limit, 10)) // maximma cantidad de elementos por pagina
+    .skip(skip) // saltarse elementos para mostrar lo que se quiere
+    .sort({ createdAt: 1 }) // ordena ascendentemente
+    .then(async (users) => { // promise
+      const total = await User.count();
+      const totalPages = Math.round(total / limit);
+      const hasMore = page < totalPages;
+
+      res.status(200).json({
+        total,
+        currentPage: page,
+        totalPages,
+        hasMore,
+        users,
+      });
+    });
 };
 
 const create = async (req, res) => {
