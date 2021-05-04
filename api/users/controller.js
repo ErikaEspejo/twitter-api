@@ -10,7 +10,7 @@ const list = async (req, res) => {
   const { page = 1, limit = 10 } = req.query;
   const skip = (page - 1) * limit;// el skip se salta elementos para no mostrarlos
 
-  User.find({ active: true }, ['name', 'username', 'createdAt', 'updatedAt'])
+  User.find({ active: true }, ['name', 'username', 'createdAt', 'updatedAt', 'role'])
     .limit(parseInt(limit, 10)) // maximma cantidad de elementos por pagina
     .skip(skip) // saltarse elementos para mostrar lo que se quiere
     .sort({ createdAt: 1 }) // ordena ascendentemente
@@ -31,7 +31,7 @@ const list = async (req, res) => {
 
 const create = async (req, res) => {
   const {
-    name, email, username, password,
+    name, email, username, password, role,
   } = req.body; // Destructuración de las llaves - valor del request
   const salt = bcrypt.genSaltSync(config.saltRounds);
   const passwordHash = bcrypt.hashSync(password, salt);
@@ -48,6 +48,7 @@ const create = async (req, res) => {
     email,
     username,
     password: passwordHash,
+    role,
   };
 
   const newUser = new User(user);
@@ -74,8 +75,8 @@ const login = async (req, res) => {
 };
 
 const remove = async (req, res) => {
-  const { username } = req.body;
-  const userFind = await User.findOne({ username });
+  const { id } = req.body;
+  const userFind = await User.findOne({ _id: id });
 
   // eslint-disable-next-line no-underscore-dangle
   const userDeleted = await User.deleteOne({ _id: userFind._id });
@@ -86,18 +87,15 @@ const remove = async (req, res) => {
       .json({ message: locale.translate('errors.user.userDeleted') });
   } else {
     res.status(500).json({
-      message: `${locale.translate('errors.user.onDelete')} ${username}`,
+      message: `${locale.translate('errors.user.onDelete')} ${userFind.username}`,
     });
   }
 };
 
 const update = async (req, res) => {
-  const usernameParam = req.params.username;
+  const idParam = req.params.id;
   const {
-    name,
-    email,
-    username,
-    password,
+    name, email, username, password,
   } = req.body;
 
   if (name && email && username && password) {
@@ -108,7 +106,7 @@ const update = async (req, res) => {
       password,
     };
 
-    const userFind = await User.findOne({ username: usernameParam });
+    const userFind = await User.findOne({ _id: idParam });
 
     if (userFind) {
       const userUpdated = await User.updateOne(
@@ -120,19 +118,21 @@ const update = async (req, res) => {
       );
 
       if (userUpdated.ok === 1) {
-        res.status(204).json();
+        res.status(204).json({
+          message: locale.translate('errors.user.userUpdated'),
+        });
       } else {
         res.status(500).json({
           message: `${locale.translate(
             'errors.user.onUpdate',
-          )} ${usernameParam}`,
+          )} ${userFind.username}`,
         });
       }
     } else {
       res.status(500).json({
         message: `${locale.translate(
           'errors.user.userNotExist',
-        )} ${usernameParam}`,
+        )} ${userFind.username}`,
       });
     }
   } else {

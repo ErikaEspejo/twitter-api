@@ -2,7 +2,7 @@ const express = require('express');
 const api = require('../api');
 const { config } = require('../config');
 
-const { port } = config.http;
+const { port, host } = config.http;
 
 const app = express();
 app.use(express.json());
@@ -10,9 +10,9 @@ app.use('/api', api); // Cuando vaya una peticion a la ruta api, utiliza el meto
 // app.use('/api/v1',api)
 
 const init = () => {
-  app.listen(port, () => {
+  app.listen(port, host, () => {
     /* eslint-disable no-console */
-    console.log(`Servidor iniciado en el puerto ${port}...`);
+    console.log(`Servidor iniciado en ${host}:${port}...`);
     /* eslint-enable no-console */
   });
 };
