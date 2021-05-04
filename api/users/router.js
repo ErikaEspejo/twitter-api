@@ -1,6 +1,10 @@
 const express = require('express');
 const {
-  list, create, getUser, update, login, remove,
+  list,
+  create,
+  update,
+  remove,
+  login,
 } = require('./controller');
 const { validateUser, validateLogin } = require('../middleware/validator');
 const { authenticator } = require('../middleware/authenticator');
@@ -23,7 +27,6 @@ router
 
 router
   .route('/:username') //
-  .get(getUser) //
   .put(authenticator, userAuthorization, update); // update
 
 module.exports = router;
