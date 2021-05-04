@@ -1,21 +1,71 @@
-const { tweets } = require('./model');
+const Tweet = require('./model');
 
 const list = (req, res) => {
-  res.status(200).json(tweets);
+  const { page = 1, limit = 10 } = req.query;
+  const skip = (page - 1) * limit;
+
+  Tweet.find({}, ['likes', 'content', 'createdAt', 'user', 'comments'])
+    .populate('user', ['name', 'username'])
+    .populate('comments.user', ['name', 'username'])
+    .limit(parseInt(limit, 10))
+    .skip(skip)
+    .sort({ createdAt: -1 })
+    .then(async (tweets) => {
+      const total = await Tweet.estimatedDocumentCount();
+      const totalPages = Math.round(total / limit);
+      const hasMore = page < totalPages;
+
+      res.status(200).json({
+        total,
+        currentPage: page,
+        totalPages,
+        hasMore,
+        tweets,
+      });
+    });
 };
 
 const create = (req, res) => {
-  const { content, authUsername } = req.body; // Destructuración de las llaves - valor del request
-  const date = new Date().toDateString();
+  const { content, userId } = req.body;
 
   const tweet = {
     content,
-    username: authUsername,
-    date,
+    user: userId,
   };
 
-  tweets.push(tweet);
-  res.status(201).json(tweets); // muestra el json del listado de usuarios.
+  const newTweet = new Tweet(tweet);
+  newTweet.save().then((tweetCreated) => {
+    res.status(200).json(tweetCreated);
+  });
 };
 
-module.exports = { list, create };
+const createComment = (req, res) => {
+  const { comment, tweetId, userId } = req.body;
+
+  const comments = {
+    comment,
+    user: userId,
+  };
+
+  Tweet.updateOne({ _id: tweetId }, { $addToSet: { comments } })
+    .then(() => {
+      res.status(200).json({ message: 'ok' });
+    }).catch(() => {
+      res.status(500).json({ message: 'no actualizado' });
+    });
+};
+
+const likes = (req, res) => {
+  const { tweetId } = req.body;
+
+  Tweet.updateOne({ _id: tweetId }, { $inc: { likes: 1 } })
+    .then(() => {
+      res.status(200).json({ message: 'ok' });
+    }).catch(() => {
+      res.status(500).json({ message: 'no actualizado' });
+    });
+};
+
+module.exports = {
+  list, create, createComment, likes,
+};
