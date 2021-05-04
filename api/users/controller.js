@@ -15,7 +15,7 @@ const list = async (req, res) => {
     .skip(skip) // saltarse elementos para mostrar lo que se quiere
     .sort({ createdAt: 1 }) // ordena ascendentemente
     .then(async (users) => { // promise
-      const total = await User.count();
+      const total = await User.estimatedDocumentCount();
       const totalPages = Math.round(total / limit);
       const hasMore = page < totalPages;
 
@@ -56,37 +56,6 @@ const create = async (req, res) => {
   });
 };
 
-const getUser = (req, res) => {
-  const { username } = req.params; // entra a los parametros del request (username)
-  const user = users.filter((u) => u.username === username); // filtra solo el usuario
-
-  if (Object.keys(user).length === 0) {
-    res.send('Usuario no encontrado');
-  } else {
-    const { name } = user[0];
-    const { email } = user[0];
-
-    res.send(`Username: ${username}, Nombre: ${name}, Email: ${email}`);
-  }
-};
-
-const update = (req, res) => {
-  const { username } = req.params;
-  const found = users.filter((u) => u.username === username);
-
-  if (found && found.length > 0) {
-    /* Si se incluyen todos los datos pero se encuentra otro usuario con el mismo username,
-    actualiza con los datos ingresados. */
-    found[0].name = req.body.name ? req.body.name : found[0].name;
-    found[0].email = req.body.email ? req.body.email : found[0].email;
-    found[0].password = req.body.password ? req.body.password : found[0].password;
-
-    res.status(204).json(users);
-  } else {
-    res.status(500).json({ message: `El usuario ${username} no existe.` }); // muestra que el usuario no existe
-  }
-};
-
 const login = async (req, res) => {
   const { username, password } = req.body;
 
@@ -104,12 +73,77 @@ const login = async (req, res) => {
   }
 };
 
-const remove = (req, res) => {
+const remove = async (req, res) => {
   const { username } = req.body;
-  users = users.filter((u) => u.username !== username);
-  res.status(200).json(users);
+  const userFind = await User.findOne({ username });
+
+  // eslint-disable-next-line no-underscore-dangle
+  const userDeleted = await User.deleteOne({ _id: userFind._id });
+
+  if (userDeleted.ok === 1) {
+    res
+      .status(200)
+      .json({ message: locale.translate('errors.user.userDeleted') });
+  } else {
+    res.status(500).json({
+      message: `${locale.translate('errors.user.onDelete')} ${username}`,
+    });
+  }
+};
+
+const update = async (req, res) => {
+  const usernameParam = req.params.username;
+  const {
+    name,
+    email,
+    username,
+    password,
+  } = req.body;
+
+  if (name && email && username && password) {
+    const user = {
+      name,
+      email,
+      username,
+      password,
+    };
+
+    const userFind = await User.findOne({ username: usernameParam });
+
+    if (userFind) {
+      const userUpdated = await User.updateOne(
+        // eslint-disable-next-line no-underscore-dangle
+        { _id: userFind._id },
+        {
+          $set: { name: user.name, email: user.email, password: user.password },
+        },
+      );
+
+      if (userUpdated.ok === 1) {
+        res.status(204).json();
+      } else {
+        res.status(500).json({
+          message: `${locale.translate(
+            'errors.user.onUpdate',
+          )} ${usernameParam}`,
+        });
+      }
+    } else {
+      res.status(500).json({
+        message: `${locale.translate(
+          'errors.user.userNotExist',
+        )} ${usernameParam}`,
+      });
+    }
+  } else {
+    res.status(500).json({ message: locale.translate('errors.invalidData') });
+  }
 };
 
 module.exports = {
-  list, create, getUser, update, login, remove,
+  list,
+  create,
+  update,
+  remove,
+  login,
 };
