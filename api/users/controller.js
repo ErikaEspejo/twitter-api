@@ -13,7 +13,7 @@ const list = async (req, res) => {
   User.find({ active: true }, ['name', 'username', 'createdAt', 'updatedAt', 'role'])
     .limit(parseInt(limit, 10)) // maximma cantidad de elementos por pagina
     .skip(skip) // saltarse elementos para mostrar lo que se quiere
-    .sort({ createdAt: 1 }) // ordena ascendentemente
+    .sort({ createdAt: -1 }) // ordena ascendentemente
     .then(async (users) => { // promise
       const total = await User.estimatedDocumentCount();
       const totalPages = Math.round(total / limit);
