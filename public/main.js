@@ -8,9 +8,19 @@ const loadTweets = () => {
       let html = '';
       tweets.forEach((tweet) => {
         html += `<li>
-                  <p><a class="link" href='users.html?id=${tweet.user?._id}'>${tweet.user?.name}<a> says:</p>
+                  <p class='username'>
+                    <a class="user"  href='users.html?id=${tweet.user?._id}'> ${tweet.user?.name}</a> @${tweet.user?.username}</p>
                   <p>${tweet.content}</p>
-                  <p><a class="link" href='users.html?id=${tweet?._id}'>Comments: ${tweet.comments.length}<a> Likes: ${tweet.likes}</p>
+                  <div class="interactionButtons">
+                    <div class="comments">
+                      <a class="link comment" href='users.html?id=${tweet?._id}'> <i class="far fa-comment"></i> </a>
+                      <span>${tweet.comments.length}</span>
+                    </div>
+                    <div class="likes">
+                      <a class="link like" href='users.html?id=${tweet?._id}'> <i class="far fa-heart"></i> </a>
+                      <span>${tweet.likes}</span>
+                    </div>
+                  </div>
                   <p>${tweet.createdAt}</p>
                 </li>`;
       });
