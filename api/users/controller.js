@@ -70,7 +70,13 @@ const login = async (req, res) => {
       res
         .status(200)
         .cookie('token', token, { maxAge: 60 * 60 * 24 * 10000, httpOnly: true })
-        .json({ message: 'ok' });
+        .json({
+          data: {
+            username: foundUser.username,
+            name: foundUser.name,
+          },
+          message: 'ok',
+        });
     } else {
       res.status(500).json({ message: 'user not found' });
     }
@@ -143,10 +149,16 @@ const update = async (req, res) => {
   }
 };
 
+const logout = (req, res) => {
+  res.clearCookie('token')
+    .json({ message: 'ok' });
+};
+
 module.exports = {
   list,
   create,
   update,
   remove,
   login,
+  logout,
 };

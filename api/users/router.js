@@ -5,6 +5,7 @@ const {
   update,
   remove,
   login,
+  logout,
 } = require('./controller');
 const { validateUser, validateLogin } = require('../middleware/validator');
 const { authenticator } = require('../middleware/authenticator');
@@ -16,14 +17,18 @@ const router = express.Router();
 router.use(logger);
 
 router
-  .route('/')//
-  .get(list)// list
-  .delete(authenticator, usersRemoveAuth, remove) // delete
-  .post(validateUser, create);// create
+  .route('/')
+  .get(list)
+  .delete(authenticator, usersRemoveAuth, remove)
+  .post(validateUser, create);
 
 router
-  .route('/login')//
-  .post(validateLogin, login); // login
+  .route('/login')
+  .post(validateLogin, login);
+
+router
+  .route('/logout')
+  .get(logout);
 
 router
   .route('/:id') //

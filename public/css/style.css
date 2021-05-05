@@ -36,6 +36,10 @@ body {
   flex-wrap: wrap;
 }
 
+#private, #public {
+  display:none;
+}
+
 .container .tweet-list li {
   margin-block: 20px;
   list-style: none
