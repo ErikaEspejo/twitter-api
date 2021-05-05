@@ -20,7 +20,7 @@ const list = (req, res) => {
         currentPage: page,
         totalPages,
         hasMore,
-        tweets,
+        data: tweets,
       });
     });
 };

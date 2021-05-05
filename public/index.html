@@ -11,18 +11,21 @@
   <title>Twitter</title>
   <script src="main.js"></script>
 </head>
-<body onload="loadTweets()">
+<body onload="init()">
   <header class="header">
     <img src="images/logo.png"/>
     <h1>twitter</h1>
   </header>
   <div class="container">
-    <div class="tweet-list">
-      <h2>tweets</h2>
-      <div id="tweets" >
+    <div id='private' class="tweet-list">
+      <div>
+        <p id="welcome"></p>
+        <button type="button" onclick='logout()'>Logout</button>
       </div>
+      <h2>tweets</h2>
+      <div id="tweets" ></div>
     </div>
-    <div class="forms">
+    <div id='public' class="forms">
       <div class="login">
         <div class="message" id="message">
 
