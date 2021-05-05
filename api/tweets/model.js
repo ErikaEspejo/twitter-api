@@ -4,7 +4,7 @@ const collection = 'tweets';
 
 const objectSchema = {
   content: { type: String, required: true },
-  like: { type: Number, default: 0, required: true },
+  likes: { type: Number, default: 0, required: true },
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
   comments: [{
     comment: { type: String },

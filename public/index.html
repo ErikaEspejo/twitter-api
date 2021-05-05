@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link href="./css/font-awesome/css/fontawesome.css" rel="stylesheet">
+  <link href="./css/font-awesome/css/regular.css" rel="stylesheet">
+  <link rel="shortcut icon" href="https://about.twitter.com/etc/designs/about2-twitter/public/img/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="./css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Twitter</title>
+  <script src="main.js"></script>
+</head>
+<body onload="loadTweets()">
+  <header class="header">
+    <img src="images/logo.png"/>
+    <h1>twitter</h1>
+  </header>
+  <div class="container">
+    <div class="tweet-list">
+      <h2>tweets</h2>
+      <div id="tweets" >
+      </div>
+    </div>
+    <div class="signup">
+      <h2>Sign Up</h2>
+      <p>
+        <label for="">
+          <input id="name" type="text" placeholder="your-name">
+        </label>
+      </p>
+      <p>
+        <label for="">
+          <input id="username" type="text" placeholder="your-username">
+        </label>
+      </p>
+      <p>
+      <p>
+        <label for="">
+          <input id="email" type="email" placeholder="email@email.com">
+        </label>
+      </p>
+      <p>
+        <label for="">
+          <input id="password" type="password" placeholder="password">
+        </label>
+      </p>
+      <p>
+        <label for="">
+          <input id="passwordConfirmation" type="password" placeholder="password confirmation">
+        </label>
+      </p>
+      <p>
+        <button onclick="createUser()" type="submit">
+          Create User
+        </button>
+      </p>
+    </div>
+  </div>
+</body>
+</html>
