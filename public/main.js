@@ -31,11 +31,11 @@ const loadTweets = () => {
 const createUser = () => {
   const url = '/api/users';
   const user = {
-    name: document.getElementById('name').value,
-    username: document.getElementById('username').value,
-    email: document.getElementById('email').value,
-    password: document.getElementById('password').value,
-    passwordConfirmation: document.getElementById('passwordConfirmation').value,
+    name: document.getElementById('signup_name').value,
+    username: document.getElementById('signup_username').value,
+    email: document.getElementById('signup_email').value,
+    password: document.getElementById('signup_password').value,
+    passwordConfirmation: document.getElementById('signup_passwordConfirmation').value,
   };
   const options = {
     method: 'POST',
@@ -47,10 +47,36 @@ const createUser = () => {
   fetch(url, options)
     .then((res) => res.json())
     .then(() => {
-      document.getElementById('name').value = '';
-      document.getElementById('username').value = '';
-      document.getElementById('email').value = '';
-      document.getElementById('password').value = '';
-      document.getElementById('passwordConfirmation').value = '';
+      document.getElementById('signup_name').value = '';
+      document.getElementById('signup_username').value = '';
+      document.getElementById('signup_email').value = '';
+      document.getElementById('signup_password').value = '';
+      document.getElementById('signup_passwordConfirmation').value = '';
+    });
+};
+
+const login = () => {
+  const url = '/api/users/login';
+  const user = {
+    username: document.getElementById('login_username').value,
+    password: document.getElementById('login_password').value,
+  };
+  const options = {
+    method: 'POST',
+    body: JSON.stringify(user),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  fetch(url, options)
+    .then((res) => res.json())
+    .then((json) => {
+      if (json.message === 'ok') {
+        document.getElementById('message').innerHTML = 'user authenticated!';
+      } else {
+        document.getElementById('login_username').value = '';
+        document.getElementById('message').innerHTML = json.message;
+      }
+      document.getElementById('login_password').value = '';
     });
 };

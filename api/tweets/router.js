@@ -11,7 +11,7 @@ const router = express.Router();
 router.use(logger);
 
 router.route('/')
-  .get(list)
+  .get(authenticator, list)
   .post(authenticator, validateTweet, create);
 
 router.route('/comments')
