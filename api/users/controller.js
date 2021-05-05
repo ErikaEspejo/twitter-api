@@ -67,7 +67,10 @@ const login = async (req, res) => {
     const result = await bcrypt.compare(password, foundUser.password);
     if (result) {
       const token = jwt.sign({ userId }, config.jwtKey);
-      res.status(200).json({ token });
+      res
+        .status(200)
+        .cookie('token', token, { maxAge: 60 * 60 * 24 * 10000, httpOnly: true })
+        .json({ message: 'ok' });
     } else {
       res.status(500).json({ message: 'user not found' });
     }
