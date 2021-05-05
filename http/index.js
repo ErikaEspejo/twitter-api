@@ -6,8 +6,8 @@ const { port, host } = config.http;
 
 const app = express();
 app.use(express.json());
-app.use('/api', api); // Cuando vaya una peticion a la ruta api, utiliza el metodo api. El cual se encuentra en el index de la carpeta api.
-// app.use('/api/v1',api)
+app.use('/api', api);
+app.use(express.static('public'));
 
 const init = () => {
   app.listen(port, host, () => {
