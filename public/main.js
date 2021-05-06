@@ -86,15 +86,15 @@ const login = () => {
         localStorage.setItem('username', json.data.username);
         localStorage.setItem('name', json.data.name);
         const name = localStorage.getItem('name');
-        document.getElementById('message').style.display = 'block';
+        document.getElementById('message').style.display = 'block'; // yo
         document.getElementById('message').innerHTML = 'user authenticated!';
-        document.getElementById('welcome').innerHTML = `Bienvenido(a) ${name}`;
+        document.getElementById('welcome').innerHTML = `Bienvenido(a) ${name}`; // yo
         loadTweets();
         document.getElementById('private').style.display = 'block';
         document.getElementById('public').style.display = 'none';
       } else {
         document.getElementById('login_username').value = '';
-        document.getElementById('message').style.display = 'block';
+        document.getElementById('message').style.display = 'block'; //
         document.getElementById('message').innerHTML = json.message;
       }
       document.getElementById('login_password').value = '';
