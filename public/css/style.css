@@ -31,13 +31,23 @@ body {
 .container{
   padding-inline: 15%;
   width: 100%;
-  display:flex;
-  justify-content:space-around;
-  flex-wrap: wrap;
+  display: flex;
+  justify-content:center
 }
 
 #private, #public {
   display:none;
+}
+
+.welcome-logout {
+  margin-bottom:50px
+}
+
+.welcome-logout > p {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 10px;
 }
 
 .container .tweet-list li {
@@ -82,22 +92,54 @@ body {
 }
 
 .likes {
-  margin-left: 20px
+  margin-left: 20px;
+}
+
+.comment:hover {
+  background: rgba(29, 161, 242, 0.15);
+  color: #1DA1F2;
 }
 
 .like:hover {
   background: rgba(253, 22, 5, 0.15);
   color: red;
-};
+}
 
+.tweet-date {
+  font-size:0.8rem;
+  color:rgb(169, 169, 169);
 
-.comment:hover {
-  background: rgba(29, 161, 242, 0.15);
-  color: #1DA1F2;
-};
+}
 
-.container .forms > p {
-  margin: 15px 0;
+.message {
+  width:100%;
+  text-align: center;
+  padding: 8px;
+  margin-bottom: 15px;
+  height:30px;
+  color:red;
+  background: rgba(255, 0,0,0.2);
+  display:none;
+  border-radius: 5px;
+}
+
+.forms {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.login,
+.signup {
+  padding: 20px 40px;
+  border-radius: 10px;
+  box-shadow:  0px 0px 8px 0px rgba(20,20,20,0.1);
+  margin-bottom: 20px;
+  margin-inline: 10px;
+}
+
+.container .forms p {
+  margin: 12px 0;
 }
 
 .forms p input {
@@ -108,17 +150,32 @@ body {
   outline: none;
   border: 1px solid gray;
 }
-.forms p button {
+
+.forms p input:focus {
+  border: 2px solid #1DA1F2;
+}
+
+.forms p button,
+.logout-button {
   background:#1DA1F2;
   height:30px;
-  width: 250px;
+  width: 100%;
   border-radius: 15px;
   border:none;
   color: white;
   font-size: 1rem;
   font-weight: 600;
+  margin-top: 5px;
 }
 
-.forms p button:hover {
+.forms p button:hover,
+.logout-button:hover {
   cursor: pointer;
+  background: rgb(30, 145, 216)
+}
+
+@media screen and (min-width: 700px) {
+  .container{
+  padding-inline: 5%;
+  }
 }

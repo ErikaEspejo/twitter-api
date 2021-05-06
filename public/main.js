@@ -6,7 +6,7 @@ const init = () => {
     loadTweets();
     document.getElementById('private').style.display = 'block';
   } else {
-    document.getElementById('public').style.display = 'block';
+    document.getElementById('public').style.display = 'flex';
   }
 };
 
@@ -28,11 +28,11 @@ const loadTweets = () => {
       <span>${tweet.comments.length}</span>
       </div>
       <div class="likes">
-      <a class="link like" href='users.html?id=${tweet?._id}'> <i class="far fa-heart"></i> </a>
+      <a class="link like" href='#'> <i class="far fa-heart"></i> </a>
       <span>${tweet.likes}</span>
       </div>
       </div>
-      <p>${tweet.createdAt}</p>
+      <p class='tweet-date'>${tweet.createdAt}</p>
       </li>`;
       });
       document.getElementById('tweets').innerHTML = `<ul>${html}</ul>`;
@@ -85,12 +85,16 @@ const login = () => {
       if (json.message === 'ok') {
         localStorage.setItem('username', json.data.username);
         localStorage.setItem('name', json.data.name);
+        const name = localStorage.getItem('name');
+        document.getElementById('message').style.display = 'block';
         document.getElementById('message').innerHTML = 'user authenticated!';
+        document.getElementById('welcome').innerHTML = `Bienvenido(a) ${name}`;
         loadTweets();
         document.getElementById('private').style.display = 'block';
         document.getElementById('public').style.display = 'none';
       } else {
         document.getElementById('login_username').value = '';
+        document.getElementById('message').style.display = 'block';
         document.getElementById('message').innerHTML = json.message;
       }
       document.getElementById('login_password').value = '';
@@ -102,6 +106,7 @@ const logout = () => {
   fetch(url);
   localStorage.clear();
   document.getElementById('message').innerHTML = '';
+  document.getElementById('message').style.display = 'none';
   document.getElementById('private').style.display = 'none';
-  document.getElementById('public').style.display = 'block';
+  document.getElementById('public').style.display = 'flex';
 };
