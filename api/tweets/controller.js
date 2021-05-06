@@ -50,7 +50,8 @@ const createComment = (req, res) => {
   Tweet.updateOne({ _id: tweetId }, { $addToSet: { comments } })
     .then(() => {
       res.status(200).json({ message: 'ok' });
-    }).catch(() => {
+    })
+    .catch(() => {
       res.status(500).json({ message: 'no actualizado' });
     });
 };

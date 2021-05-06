@@ -1,16 +1,15 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const { findUserById } = require('../services/userService');
 const { locale } = require('../../locale');
 const { config } = require('../../config');
 const User = require('./model');
 
 const list = async (req, res) => {
-  // paginacion, hacen parte del elemento query del request
-  // Por defecto se pone que envie la primera pagina con 10 elementos, si no se pone nada
   const { page = 1, limit = 10 } = req.query;
-  const skip = (page - 1) * limit;// el skip se salta elementos para no mostrarlos
+  const skip = (page - 1) * limit;
 
-  User.find({ active: true }, ['name', 'username', 'createdAt', 'updatedAt', 'role'])
+  User.find({ active: true }, ['name', 'username', 'createdAt', 'updatedAt'])
     .limit(parseInt(limit, 10)) // maximma cantidad de elementos por pagina
     .skip(skip) // saltarse elementos para mostrar lo que se quiere
     .sort({ createdAt: -1 }) // ordena ascendentemente
@@ -33,13 +32,13 @@ const create = async (req, res) => {
   const {
     name, email, username, password, role,
   } = req.body; // Destructuración de las llaves - valor del request
-  const salt = bcrypt.genSaltSync(config.saltRounds);
-  const passwordHash = bcrypt.hashSync(password, salt);
 
-  const userFound = await User.find({ $or: [{ username }, { email }] }, ['email', 'username']);
+  const userFound = await User.find({ $or: [{ username }, { email }] });
 
   if (userFound.length > 0) {
-    res.status(500).json({ message: locale.translate('errors.user.userExist') });
+    res
+      .status(500)
+      .json({ message: locale.translate('errors.user.userExist') });
     return;
   }
 
@@ -47,7 +46,7 @@ const create = async (req, res) => {
     name,
     email,
     username,
-    password: passwordHash,
+    password,
     role,
   };
 
@@ -74,35 +73,40 @@ const login = async (req, res) => {
           data: {
             username: foundUser.username,
             name: foundUser.name,
+            token,
           },
           message: 'ok',
         });
     } else {
-      res.status(500).json({ message: 'user not found' });
+      res.json({ message: locale.translate('errors.user.userNotExists') });
     }
+  } else {
+    res.json({ message: locale.translate('errors.user.userNotExists') });
   }
 };
 
 const remove = async (req, res) => {
   const { id } = req.body;
-  const userFind = await User.findOne({ _id: id });
 
-  // eslint-disable-next-line no-underscore-dangle
-  const userDeleted = await User.deleteOne({ _id: userFind._id });
-
-  if (userDeleted.ok === 1) {
-    res
-      .status(200)
-      .json({ message: locale.translate('errors.user.userDeleted') });
-  } else {
-    res.status(500).json({
-      message: `${locale.translate('errors.user.onDelete')} ${userFind.username}`,
-    });
-  }
+  await User.findOneAndDelete({ _id: { $eq: id } }, (err, docs) => {
+    if (err) {
+      res.status(500).json({
+        message: locale.translate('errors.user.onDelete'),
+      });
+    } else if (docs === null) {
+      res
+        .status(400)
+        .json({ message: locale.translate('errors.user.userNotExists') });
+    } else {
+      res
+        .status(200)
+        .json({ message: locale.translate('success.user.onDelete') });
+    }
+  });
 };
 
 const update = async (req, res) => {
-  const idParam = req.params.id;
+  const { id } = req.params;
   const {
     name, email, username, password,
   } = req.body;
@@ -115,7 +119,7 @@ const update = async (req, res) => {
       password,
     };
 
-    const userFind = await User.findOne({ _id: idParam });
+    const userFind = await findUserById(id);
 
     if (userFind) {
       const userUpdated = await User.updateOne(
@@ -128,20 +132,16 @@ const update = async (req, res) => {
 
       if (userUpdated.ok === 1) {
         res.status(204).json({
-          message: locale.translate('errors.user.userUpdated'),
+          message: locale.translate('success.user.onUpdate'),
         });
       } else {
         res.status(500).json({
-          message: `${locale.translate(
-            'errors.user.onUpdate',
-          )} ${userFind.username}`,
+          message: `${locale.translate('errors.user.onUpdate')} ${id}`,
         });
       }
     } else {
       res.status(500).json({
-        message: `${locale.translate(
-          'errors.user.userNotExist',
-        )} ${userFind.username}`,
+        message: `${locale.translate('errors.user.userNotExists')} ${id}`,
       });
     }
   } else {

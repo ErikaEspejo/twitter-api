@@ -5,43 +5,46 @@
 }
 
 body {
-  font-family:'Helvetica';
-  font-size:62.5%
+  font-family: 'Helvetica';
+  font-size: 62.5%;
 }
 
-.header{
-  background:#1DA1F2;
-  color:white;
+h2 {
+  font-size: 1.1rem;
+  margin-block-end: 20px;
+}
+
+.header {
+  background: #1DA1F2;
+  color: white;
   padding-inline: 20px;
   padding-block: 10px;
   margin-block-end: 40px;
   display: flex;
-  align-items: center
+  align-items: center;
 }
 
 .header img {
-  height:20px;
-  margin-inline-end: 10px
+  height: 20px;
+  margin-inline-end: 10px;
 }
 
-.header h1{
+.header h1 {
   font-weight: 600;
 }
 
 .container{
   padding-inline: 15%;
-  width: 100%;
   display: flex;
-  justify-content:center
+  justify-content: center;
 }
 
-#private, #public {
-  display:none;
+#private,
+#public {
+  display: none;
+  margin-top:10px;
 }
 
-.welcome-logout {
-  margin-bottom:50px
-}
 
 .welcome-logout > p {
   text-align: center;
@@ -51,13 +54,13 @@ body {
 }
 
 .container .tweet-list li {
-  margin-block: 20px;
-  list-style: none
+  margin-block-end: 20px;
+  list-style: none;
 }
 
 .container .tweet-list li p {
   margin-block: 5px;
-  list-style: none
+  font-size: 0.8rem;
 }
 
 .container .username .user {
@@ -67,19 +70,25 @@ body {
 }
 
 .link i {
-  margin: 0 auto
+  margin: 0 auto;
 }
 
-.container .tweet-list .username {
+.container .tweet-list .username,
+.interactionButtons .link,
+.interactionButtons span {
   color: gray;
 }
 
 .interactionButtons .link {
+  font-size: 1rem;
   text-decoration: none;
-  color:gray;
-  height: 25px;
-  width: 25px;
+  height: 30px;
+  width: 30px;
   border-radius: 50%;
+}
+
+.interactionButtons span {
+  font-size: 0.8rem;
 }
 
 .interactionButtons,
@@ -106,21 +115,21 @@ body {
 }
 
 .tweet-date {
-  font-size:0.8rem;
+  font-size:1.1rem;
   color:rgb(169, 169, 169);
-
 }
 
 .message {
-  width:100%;
+  width:200px;
   text-align: center;
   padding: 8px;
-  margin-bottom: 15px;
-  height:30px;
+  height: 30px;
   color:red;
   background: rgba(255, 0,0,0.2);
   display:none;
   border-radius: 5px;
+  font-size: 0.8rem;
+  margin: 0 auto;
 }
 
 .forms {
@@ -142,36 +151,69 @@ body {
   margin: 12px 0;
 }
 
-.forms p input {
-  height:30px;
-  width: 250px;
+.new-tweet,
+.forms p input{
   padding: 10px;
-  border-radius: 15px;
   outline: none;
   border: 1px solid gray;
 }
 
-.forms p input:focus {
+.new-tweet {
+  height:80px;
+  border-radius: 15px;
+  width: 150%;
+  font-family: Helvetica;
+
+}
+
+.forms p input{
+  width: 100%;
+  height:30px;
+  border-radius: 15px;
+}
+
+.forms p input:focus,
+.new-tweet:focus {
   border: 2px solid #1DA1F2;
 }
 
 .forms p button,
-.logout-button {
+.logout-button,
+.new-tweet-button {
   background:#1DA1F2;
-  height:30px;
-  width: 100%;
   border-radius: 15px;
   border:none;
   color: white;
-  font-size: 1rem;
   font-weight: 600;
   margin-top: 5px;
 }
 
+.forms p button {
+  height:30px;
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+.logout-button,
+.new-tweet-button {
+  height:25px;
+  width: 40%;
+  font-size: 0.9rem;
+  margin-bottom: 30px;
+}
+
 .forms p button:hover,
-.logout-button:hover {
+.logout-button:hover,
+.new-tweet-button:hover {
   cursor: pointer;
   background: rgb(30, 145, 216)
+}
+
+.forms p button:active,
+.logout-button:active,
+.new-tweet-button:active {
+  cursor: pointer;
+  background: rgb(111, 200, 255)
 }
 
 @media screen and (min-width: 700px) {

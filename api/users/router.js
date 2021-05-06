@@ -7,10 +7,10 @@ const {
   login,
   logout,
 } = require('./controller');
+const { logger } = require('../middleware/logger');
 const { validateUser, validateLogin } = require('../middleware/validator');
 const { authenticator } = require('../middleware/authenticator');
-const { usersRemoveAuth, usersUpdateAuth } = require('../middleware/authorization');
-const { logger } = require('../middleware/logger');
+const { usersAuthorization } = require('../middleware/authorization');
 
 const router = express.Router();
 
@@ -19,7 +19,7 @@ router.use(logger);
 router
   .route('/')
   .get(list)
-  .delete(authenticator, usersRemoveAuth, remove)
+  .delete(authenticator, usersAuthorization, remove)
   .post(validateUser, create);
 
 router
@@ -32,6 +32,6 @@ router
 
 router
   .route('/:id') //
-  .put(authenticator, usersUpdateAuth, update); // update
+  .put(authenticator, usersAuthorization, validateUser, update); // update
 
 module.exports = router;

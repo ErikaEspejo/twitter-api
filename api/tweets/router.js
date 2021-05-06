@@ -10,14 +10,17 @@ const router = express.Router();
 
 router.use(logger);
 
-router.route('/')
+router
+  .route('/')
   .get(authenticator, list)
   .post(authenticator, validateTweet, create);
 
-router.route('/comments')
+router
+  .route('/comments')
   .post(authenticator, validateComment, createComment);
 
-router.route('/likes')
+router
+  .route('/likes')
   .post(authenticator, likes);
 
 module.exports = router;

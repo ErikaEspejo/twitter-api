@@ -1,13 +1,15 @@
+const { locale } = require('../../locale');
+
 const validateTweet = (req, res, next) => {
   const { content } = req.body;
   const errors = [];
 
   if (content) {
     if (content.length > 280) {
-      errors.push('max characters exceded');
+      errors.push(locale.translate('errors.validate.maxCharactersAllowed'));
     }
   } else {
-    errors.push('empty data');
+    errors.push(locale.translate('errors.validate.emptyData'));
   }
 
   if (errors.length === 0) {
@@ -23,10 +25,10 @@ const validateComment = (req, res, next) => {
 
   if (comment && tweetId) {
     if (comment.length > 280) {
-      errors.push('max characters exceded');
+      errors.push(locale.translate('errors.validate.maxCharactersAllowed'));
     }
   } else {
-    errors.push('empty data');
+    errors.push(locale.translate('errors.validate.emptyData'));
   }
 
   if (errors.length === 0) {
@@ -38,37 +40,48 @@ const validateComment = (req, res, next) => {
 
 const validateUser = (req, res, next) => {
   const {
-    name, email, username, password, passwordConfirmation,
+    name,
+    email,
+    username,
+    password,
+    passwordConfirmation,
+    role = 'registered',
   } = req.body;
+
   const errors = [];
   const regExpEmail = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
-  const regExpPassword = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/);
+  const regExpPassword = new RegExp(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+  );
+  const regExpRole = new RegExp(/^(admin|registered)$/);
 
-  if (name && email && username && password && passwordConfirmation) {
+  if (name && email && username && password && passwordConfirmation && role) {
     if (name.length < 3) {
-      errors.push('invalid name');
+      errors.push(locale.translate('errors.validate.invalidName'));
     }
     if (username.length < 6) {
-      errors.push('invalid username');
+      errors.push(locale.translate('errors.validate.invalidUsername'));
     }
     if (!regExpEmail.test(email)) {
-      errors.push('invalid email');
+      errors.push(locale.translate('errors.validate.invalidEmail'));
     }
     if (!regExpPassword.test(password)) {
-      errors.push('invalid password');
+      errors.push(locale.translate('errors.validate.invalidPassword'));
     }
     if (password !== passwordConfirmation) {
-      errors.push('Passwords don\'t match.');
+      errors.push(locale.translate('errors.validate.passwordsDontMatch'));
+    }
+    if (!regExpRole.test(role)) {
+      errors.push('errors.validate.invalidRole');
     }
   } else {
-    errors.push('empty data');
+    errors.push(locale.translate('errors.validate.emptyData'));
   }
 
-  // validation:
   if (errors.length === 0) {
-    next(); // permite continuar con el siguiente middleware
+    next();
   } else {
-    res.json({ message: errors }); // como no aparece next() muere la petición
+    res.status(500).json({ message: errors });
   }
 };
 
@@ -78,19 +91,22 @@ const validateLogin = (req, res, next) => {
 
   if (username && password) {
     if (username.length < 6) {
-      errors.push('invalid username');
+      errors.push(locale.translate('errors.validate.invalidUsername'));
     }
   } else {
-    errors.push('empty data');
+    errors.push(locale.translate('errors.validate.emptyData'));
   }
 
   if (errors.length === 0) {
     next();
   } else {
-    res.json({ message: errors });
+    res.status(500).json({ message: errors });
   }
 };
 
 module.exports = {
-  validateUser, validateLogin, validateTweet, validateComment,
+  validateUser,
+  validateLogin,
+  validateTweet,
+  validateComment,
 };

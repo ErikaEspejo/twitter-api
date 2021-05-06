@@ -1,9 +1,10 @@
 {
-  "name": "10-web",
+  "name": "06-web",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
+    "seeds": "node seeds/index.js",
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "jest"
