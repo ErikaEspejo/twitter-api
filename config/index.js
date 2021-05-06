@@ -15,7 +15,7 @@ const config = {
   database: {
     connectionString: process.env.DB_CONNECTION_STRING,
   },
-  saltRounds: process.env.parseInt(process.env.SALT_ROUNDS, 10),
+  saltRounds: parseInt(process.env.SALT_ROUNDS, 10),
 };
 
 module.exports = { config };
