@@ -1,13 +1,13 @@
-const Tweet = require('./model');
+const Tweet = require("./model");
 
 const list = (req, res) => {
   const { page = 1, limit = 10 } = req.query;
   const skip = (page - 1) * limit;
 
-  Tweet.find({}, ['likes', 'content', 'createdAt', 'user', 'comments'])
-    .populate('user', ['name', 'username'])
-    .populate('comments.user', ['name', 'username'])
-    .limit(parseInt(limit, 10))
+  Tweet.find({}, ["likes", "content", "createdAt", "user", "comments"])
+    .populate("user", ["name", "username"])
+    .populate("comments.user", ["name", "username"])
+    .limit(Number(limit))
     .skip(skip)
     .sort({ createdAt: -1 })
     .then(async (tweets) => {
@@ -49,10 +49,14 @@ const createComment = (req, res) => {
 
   Tweet.updateOne({ _id: tweetId }, { $addToSet: { comments } })
     .then(() => {
-      res.status(200).json({ message: 'ok' });
+      res
+        .status(200)
+        .json({ message: locale.translate("success.tweet.onUpdate") });
     })
     .catch(() => {
-      res.status(500).json({ message: 'no actualizado' });
+      res
+        .status(500)
+        .json({ message: locale.translate("errors.tweet.onUpdate") });
     });
 };
 
@@ -61,12 +65,58 @@ const likes = (req, res) => {
 
   Tweet.updateOne({ _id: tweetId }, { $inc: { likes: 1 } })
     .then(() => {
-      res.status(200).json({ message: 'ok' });
-    }).catch(() => {
-      res.status(500).json({ message: 'no actualizado' });
+      res.status(200).json({ message: "success.tweet.onUpdate" });
+    })
+    .catch(() => {
+      res
+        .status(500)
+        .json({ message: locale.translate("errors.tweet.onUpdate") });
     });
 };
 
+const destroyTweet = async (req, res) => {
+  const { tweetId, userId } = req.body;
+
+  await Tweet.findOneAndDelete(
+    {
+      $and: [{ _id: { $eq: tweetId } }, { user: { $eq: userId } }],
+    },
+    (err, docs) => {
+      if (err) {
+        res.status(500).json({
+          message: `${locale.translate("errors.tweet.onDelete")}`,
+        });
+      } else if (docs) {
+        res.status(200).json({
+          message: `${locale.translate("success.tweet.onDelete")}`,
+          id: docs._id,
+        });
+      } else {
+        res.status(404).json({
+          message: `${locale.translate("errors.tweet.tweetNotExists")}`,
+        });
+      }
+    }
+  );
+};
+
+const getExternalTweetsByUsername = async (req, res) => {
+  const { username } = req.params;
+  const tweetsResponse = await getTweetsByUsername(username);
+  const tweets = tweetsResponse.map(({ text, created_at }) => {
+    return {
+      text,
+      created_at,
+    };
+  });
+  res.status(200).json(tweets);
+};
+
 module.exports = {
-  list, create, createComment, likes,
+  list,
+  create,
+  createComment,
+  likes,
+  destroyTweet,
+  getExternalTweetsByUsername,
 };
