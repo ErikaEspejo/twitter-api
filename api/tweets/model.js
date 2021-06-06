@@ -1,15 +1,15 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const collection = 'tweets';
+const collection = "tweets";
 
 const objectSchema = {
   content: { type: String, required: true },
   likes: { type: Number, default: 0, required: true },
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
   comments: [
     {
       comment: { type: String },
-      user: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+      user: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
     },
   ],
 };
