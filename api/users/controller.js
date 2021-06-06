@@ -1,19 +1,22 @@
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const { findUserById } = require('../services/userService');
-const { locale } = require('../../locale');
-const { config } = require('../../config');
-const User = require('./model');
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const { findUserById } = require("../services/userService");
+const { locale } = require("../../locale");
+const { config } = require("../../config");
+const { newAccount } = require("../services/mailerService");
+
+const User = require("./model");
 
 const list = async (req, res) => {
   const { page = 1, limit = 10 } = req.query;
   const skip = (page - 1) * limit;
 
-  User.find({ active: true }, ['name', 'username', 'createdAt', 'updatedAt'])
-    .limit(parseInt(limit, 10)) // maximma cantidad de elementos por pagina
+  User.find({ active: true }, ["name", "username", "createdAt", "updatedAt"])
+    .limit(Number(limit)) // maximma cantidad de elementos por pagina
     .skip(skip) // saltarse elementos para mostrar lo que se quiere
     .sort({ createdAt: -1 }) // ordena ascendentemente
-    .then(async (users) => { // promise
+    .then(async (users) => {
+      // promise
       const total = await User.estimatedDocumentCount();
       const totalPages = Math.round(total / limit);
       const hasMore = page < totalPages;
@@ -29,16 +32,14 @@ const list = async (req, res) => {
 };
 
 const create = async (req, res) => {
-  const {
-    name, email, username, password, role,
-  } = req.body; // Destructuración de las llaves - valor del request
+  const { name, email, username, password, role } = req.body; // Destructuración de las llaves - valor del request
 
   const userFound = await User.find({ $or: [{ username }, { email }] });
 
   if (userFound.length > 0) {
     res
       .status(500)
-      .json({ message: locale.translate('errors.user.userExist') });
+      .json({ message: locale.translate("errors.user.userExist") });
     return;
   }
 
@@ -52,6 +53,7 @@ const create = async (req, res) => {
 
   const newUser = new User(user);
   newUser.save().then((userCreated) => {
+    newAccount(user.email);
     res.status(200).json(userCreated);
   });
 };
@@ -68,20 +70,23 @@ const login = async (req, res) => {
       const token = jwt.sign({ userId }, config.jwtKey);
       res
         .status(200)
-        .cookie('token', token, { maxAge: 60 * 60 * 24 * 10000, httpOnly: true })
+        .cookie("token", token, {
+          maxAge: 60 * 60 * 24 * 10000,
+          httpOnly: true,
+        })
         .json({
           data: {
             username: foundUser.username,
             name: foundUser.name,
             token,
           },
-          message: 'ok',
+          message: "ok",
         });
     } else {
-      res.json({ message: locale.translate('errors.user.userNotExists') });
+      res.json({ message: locale.translate("errors.user.userNotExists") });
     }
   } else {
-    res.json({ message: locale.translate('errors.user.userNotExists') });
+    res.json({ message: locale.translate("errors.user.userNotExists") });
   }
 };
 
@@ -91,25 +96,23 @@ const remove = async (req, res) => {
   await User.findOneAndDelete({ _id: { $eq: id } }, (err, docs) => {
     if (err) {
       res.status(500).json({
-        message: locale.translate('errors.user.onDelete'),
+        message: locale.translate("errors.user.onDelete"),
       });
-    } else if (docs === null) {
+    } else if (docs) {
       res
-        .status(400)
-        .json({ message: locale.translate('errors.user.userNotExists') });
+        .status(200)
+        .json({ message: locale.translate("success.user.onDelete") });
     } else {
       res
         .status(200)
-        .json({ message: locale.translate('success.user.onDelete') });
+        .json({ message: locale.translate("success.user.onDelete") });
     }
   });
 };
 
 const update = async (req, res) => {
   const { id } = req.params;
-  const {
-    name, email, username, password,
-  } = req.body;
+  const { name, email, username, password } = req.body;
 
   if (name && email && username && password) {
     const user = {
@@ -127,31 +130,30 @@ const update = async (req, res) => {
         { _id: userFind._id },
         {
           $set: { name: user.name, email: user.email, password: user.password },
-        },
+        }
       );
 
       if (userUpdated.ok === 1) {
         res.status(204).json({
-          message: locale.translate('success.user.onUpdate'),
+          message: locale.translate("success.user.onUpdate"),
         });
       } else {
         res.status(500).json({
-          message: `${locale.translate('errors.user.onUpdate')} ${id}`,
+          message: `${locale.translate("errors.user.onUpdate")} ${id}`,
         });
       }
     } else {
       res.status(500).json({
-        message: `${locale.translate('errors.user.userNotExists')} ${id}`,
+        message: `${locale.translate("errors.user.userNotExists")} ${id}`,
       });
     }
   } else {
-    res.status(500).json({ message: locale.translate('errors.invalidData') });
+    res.status(500).json({ message: locale.translate("errors.invalidData") });
   }
 };
 
 const logout = (req, res) => {
-  res.clearCookie('token')
-    .json({ message: 'ok' });
+  res.clearCookie("token").json({ message: "ok" });
 };
 
 module.exports = {
