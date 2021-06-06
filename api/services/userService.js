@@ -1,9 +1,9 @@
-const User = require('../users/model');
+const User = require("../users/model");
 
 const isAdmin = async (userId) => {
   try {
     const userFound = await User.findOne({
-      $and: [{ _id: userId }, { role: 'admin' }],
+      $and: [{ _id: userId }, { role: "admin" }],
     });
 
     if (userFound) {
@@ -11,8 +11,6 @@ const isAdmin = async (userId) => {
     }
     return false;
   } catch (err) {
-    // eslint-disable-next-line no-console
-    console.error(err);
     return false;
   }
 };
