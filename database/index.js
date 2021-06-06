@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const { config } = require('../config');
+const mongoose = require("mongoose");
+const { config } = require("../config");
 
 const init = async () => {
   const options = {
@@ -11,7 +11,7 @@ const init = async () => {
   try {
     await mongoose.connect(config.database.connectionString, options, () => {
       /* eslint-disable no-console */
-      console.log('connected to database');
+      console.log("connected to database");
       /* eslint-enable no-console */
     });
   } catch (err) {
