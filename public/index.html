@@ -1,112 +1,222 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="./css/font-awesome/css/fontawesome.css" rel="stylesheet">
-    <link href="./css/font-awesome/css/regular.css" rel="stylesheet">
-    <link rel="shortcut icon" href="https://about.twitter.com/etc/designs/about2-twitter/public/img/favicon.ico" type="image/x-icon">
-    <title>Twitter</title>
-    <script src="main.js"></script>
-    <link rel="stylesheet" href="./css/style.css" />
+    <link
+      rel="shortcut icon"
+      href="https://about.twitter.com/etc/designs/about2-twitter/public/img/favicon.ico"
+      type="image/x-icon"
+    />
+    <title>API MakeItReal</title>
+    <!-- normalize css -->
+    <link rel="stylesheet" href="assets/css/normalize-8.0.1.css" />
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/notiflix-2.7.0.min.css" />
+    <!-- main styles -->
+    <link rel="stylesheet" href="assets/css/styles.css" />
   </head>
-  <body onload="init()">
+  <body>
+    <!-- header -->
     <header class="header">
-      <img src="./images/logo.png"/>
-      <h1>twitter</h1>
+      <!-- nav -->
+      <nav class="nav">
+        <div class="wrapper">
+          <div class="logo">
+            <img
+              class="logo__img"
+              src="assets/images/logo-white.svg"
+              alt="Logo de Twitter"
+            />
+          </div>
+        </div>
+      </nav>
+      <!-- /nav -->
     </header>
-    <main>
-      <div id="message" class="message"></div>
-      <div class="container">
-        <div id="private" class="tweet-list">
-          <div class='welcome-logout'>
-            <p id="welcome"></p>
-            <button class="logout-button" type="button" onclick="logout()">Logout</button>
-          </div>
-          <form>
-            <h2>New Tweet</h2>
-            <p>
-              <label>
-                <textarea class="new-tweet" id="content" placeholder="say something"></textarea>
-              </label>
-            </p>
-            <p>
-              <button class='new-tweet-button' type="button" onclick="save()">Send</button>
-            </p>
-          </form>
-          <h2>tweets</h2>
-          <div id="tweets"></div>
-        </div>
-        <div id="public" class="forms">
-          <div class="login">
-            <h2>Login</h2>
-            <form>
-              <p>
-                <label>
-                  <input id="login_username" type="text" placeholder="username" />
-                </label>
-              </p>
-              <p>
-                <label>
-                  <input
-                    id="login_password"
-                    type="password"
-                    placeholder="password"
-                  />
-                </label>
-              </p>
-              <p>
-                <button type="button" onclick="login()">Login</button>
-              </p>
-            </form>
-          </div>
-          <div class="signup">
-            <h2>Sign Up</h2>
-            <form>
-              <p>
-                <label>
-                  <input id="signup_name" type="text" placeholder="name" />
-                </label>
-              </p>
-              <p>
-                <label>
-                  <input id="signup_username" type="text" placeholder="username" />
-                </label>
-              </p>
-              <p>
-                <label>
-                  <input
-                    id="signup_email"
-                    type="email"
-                    placeholder="email@email.com"
-                  />
-                </label>
-              </p>
-              <p>
-                <label>
-                  <input
-                    id="signup_password"
-                    type="password"
-                    placeholder="password"
-                  />
-                </label>
-              </p>
-              <p>
-                <label>
-                  <input
-                    id="signup_passwordConfirmation"
-                    type="password"
-                    placeholder="password confirmation"
-                  />
-                </label>
-              </p>
-              <p>
-                <button type="button" onclick="createUser()">Create user</button>
-              </p>
-            </form>
-          </div>
-        </div>
+    <!-- /header -->
+
+    <!-- main -->
+    <main class="main">
+      <div class="wrapper">
+        <div id="app"></div>
       </div>
     </main>
+    <!-- /main -->
+
+    <!-- template-login -->
+    <template id="template-login">
+      <div class="form">
+        <h1 class="form__h1">Iniciar sesión en Twitter</h1>
+        <p class="form__message display-none"></p>
+        <div class="mb-1">
+          <form id="form-login" action="#login" method="POST">
+            <input
+              class="form__input"
+              type="text"
+              name="username"
+              placeholder="Usuario"
+              required
+            />
+            <input
+              class="form__input"
+              type="password"
+              name="password"
+              placeholder="Contraseña"
+              required
+            />
+            <input
+              class="form__input form__input--primary"
+              type="submit"
+              value="Login"
+            />
+          </form>
+        </div>
+        <p class="text-center">
+          <a id="form-link-register" href="#register" class="form__link"
+            >Regístrate en Twitter</a
+          >
+        </p>
+      </div>
+    </template>
+    <!-- /template-login -->
+
+    <!-- template-signup -->
+    <template id="template-signup">
+      <div class="form">
+        <h1 class="header__h1">Crea tu cuenta</h1>
+        <p class="form__message display-none"></p>
+        <div class="mb-1">
+          <form id="form-register" action="#" method="POST">
+            <input
+              type="text"
+              id="txt_name"
+              name="name"
+              class="form__input"
+              placeholder="Name"
+              required
+            />
+            <input
+              type="text"
+              id="txt_username"
+              name="username"
+              class="form__input"
+              placeholder="Username"
+            />
+            <input
+              type="email"
+              id="txt_email"
+              name="email"
+              class="form__input"
+              placeholder="Email"
+              required
+            />
+            <input
+              type="password"
+              id="txt_password"
+              name="password"
+              class="form__input"
+              placeholder="Password"
+              required
+            />
+            <input
+              type="password"
+              id="txt_password-confirmation"
+              name="passwordConfirmation"
+              class="form__input"
+              placeholder="Password confirmation"
+              required
+            />
+            <input
+              type="submit"
+              value="Create user"
+              class="form__input form__input--primary"
+            />
+          </form>
+        </div>
+        <p class="text-center">
+          <a id="form-link-login" href="#login" class="form__link"
+            >Iniciar sesión</a
+          >
+        </p>
+      </div>
+    </template>
+    <!-- /template-signup -->
+
+    <!-- template-home -->
+    <template id="template-home">
+      <div class="home">
+        <div class="home__header">
+          <p class="home__p">Welcome @<span class="home__span"></span></p>
+          <a id="logout" class="home__link" href="#logout">Logout</a>
+        </div>
+        <hr />
+        <div class="form-tweet">
+          <h2 class="form-tweet__title">New tweet</h2>
+          <form id="form-tweet" action="#tweets" method="POST">
+            <textarea
+              name="tweet"
+              class="form-tweet__texarea"
+              id="textarea-tweet"
+              cols="30"
+              rows="3"
+              placeholder="What's happening?"
+              required
+            ></textarea>
+            <input
+              type="submit"
+              class="form-tweet__input form-tweet__input--submit"
+              value="Send"
+            />
+          </form>
+        </div>
+        <section class="tweets">
+          <h2 class="tweets__title">Tweets</h2>
+          <div id="articles"></div>
+        </section>
+      </div>
+    </template>
+    <!-- /template-home -->
+
+    <!-- template-tweets -->
+    <template id="template-tweets">
+      <article class="tweets-article">
+        <div class="tweets-article__div">
+          <img
+            src="assets/images/avatar-men.jpg"
+            alt="Avatar"
+            class="tweets-article__img"
+          />
+          <div class="tweets-article__content">
+            <span id="tweets-user" class="tweets-article__span"></span>
+            @<span id="tweets-username"></span> -
+            <span id="tweets-date"></span>
+            <p id="tweet-message" class="tweets-article__p"></p>
+          </div>
+        </div>
+        <div class="glyphicon">
+          <a href="#comment"
+            ><i class="far fa-comment"> <span class="comments">0</span></i></a
+          >
+          <a href="#like"
+            ><i class="far fa-heart"> <span class="likes">0</span></i></a
+          >
+        </div>
+      </article>
+    </template>
+    <!-- /template-tweets -->
+
+    <!-- script js -->
+    <script
+      src="https://kit.fontawesome.com/f2db0bb37e.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="assets/js/notiflix-2.7.0.min.js"></script>
+    <script src="assets/js/app.js"></script>
   </body>
 </html>
