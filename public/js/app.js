@@ -1,5 +1,3 @@
-const URL_BASE = "http://0.0.0.0:3000";
-
 function timeFromNow(time) {
   // Credits to
   // https://gomakethings.com/a-vanilla-js-alternative-to-the-moment.js-timefromnow-method/
@@ -87,7 +85,7 @@ function login(username, password) {
     },
   };
 
-  fetch(`${URL_BASE}/api/users/login`, options)
+  fetch(`/api/users/login`, options)
     .then((res) => res.json())
     .then((json) => {
       if (json.message === "ok") {
@@ -161,7 +159,7 @@ function loadTweets() {
       "Content-Type": "application/json",
     },
   };
-  fetch(`${URL_BASE}/api/tweets/`, options)
+  fetch(`/api/tweets/`, options)
     .then((res) => res.json())
     .then((json) => {
       document.getElementById("textarea-tweet").value = "";
@@ -219,7 +217,7 @@ function createUser() {
     },
   };
 
-  fetch(`${URL_BASE}/api/users/`, options)
+  fetch(`/api/users/`, options)
     .then((res) => res.json())
     .then((json) => console.log(json));
 }
@@ -243,7 +241,7 @@ function createTweet() {
   // eslint-disable-next-line no-undef
   Notiflix.Notify.Init({ position: "center-bottom", with: "100%" });
 
-  fetch(`${URL_BASE}/api/tweets/`, options)
+  fetch(`/api/tweets/`, options)
     .then((res) => res.json())
     .then((json) => {
       // eslint-disable-next-line no-undef
