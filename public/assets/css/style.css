@@ -84,7 +84,7 @@ img {
 .wrapper {
   width: 90%;
   max-width: 440px;
-  margin: 0 auto;
+  align-self: center;
 }
 
 /* nav */
@@ -110,9 +110,31 @@ img {
 
 /* header */
 
+/* main */
+
+.main {
+  display: flex;
+  flex-direction: column;
+}
+
+.hero {
+  background: url("https://abs.twimg.com/sticky/illustrations/lohp_en_1302x955.png");
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  height: 350px;
+}
+
+.hero img {
+  width: 40%;
+}
+
+/* main*/
+
 /* form */
 .form {
   max-width: 100%;
+  padding-block-end: 20px;
 }
 
 .form__h1 {
@@ -126,10 +148,18 @@ img {
   margin-bottom: 1em;
 }
 
-.form__input {
+.form__input,
+.form-tweet__texarea {
   display: inline-block;
   width: 100%;
   padding: 1em;
+  border: 1px solid gray;
+}
+
+.form__input:focus,
+.form-tweet__texarea:focus {
+  border: 2px solid var(--color-primary);
+  outline: none;
 }
 
 .form__input[type="text"],
@@ -247,8 +277,13 @@ hr {
 
 .glyphicon {
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
   margin-top: 1em;
+  margin-inline-start: 60px;
+}
+
+.glyphicon a {
+  margin-inline-end: 50px;
 }
 
 .comments {
@@ -257,6 +292,14 @@ hr {
 
 .likes {
   margin-left: 0.5em;
+}
+
+.comment:hover {
+  color: #1da1f2;
+}
+
+.like:hover {
+  color: red;
 }
 
 /* debug */
@@ -268,10 +311,21 @@ hr {
   outline: 1px solid var(--color-warning);
 }
 
-/* medias query */
+/* media queries */
 @media screen and (min-width: 768px) {
   .wrapper {
-    max-width: 680px;
+    max-width: 750px;
+  }
+
+  .main {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .hero {
+    width: 70vw;
+    order: -1;
+    height: calc(100vh - 60px);
   }
 
   .form {

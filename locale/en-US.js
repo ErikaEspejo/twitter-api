@@ -16,6 +16,7 @@ const dictionaryENUS = {
     },
     user: {
       userExists: "user already exists",
+      userDataInvalid: "Incorrect username or password",
       userNotExists: "user not exists",
       onUpdate: "error while updating user",
       onCreate: "error while creating user",

@@ -99,15 +99,14 @@ function login(username, password) {
         };
         localStorage.setItem("userdata", JSON.stringify(dataUser));
         removeForm();
+        document.querySelector(".hero").style.display = "none";
         init();
       } else {
-        const message = document.querySelector("p.form__message");
-        message.classList.remove("display-none");
-        message.style.display = "block";
-        message.innerHTML = json.message;
+        Notiflix.Notify.Failure(
+          "Error: The user name or password is incorrect"
+        );
       }
-    })
-    .catch((error) => console.log(error));
+    });
 }
 
 function showFormLogin() {
@@ -139,13 +138,14 @@ function showFormLogin() {
 function logout() {
   // TODO Falta implementar logout, para que el token sea revocado, el en backend.
   const dashboard = document.querySelector(".home") || undefined;
-  fetch(`${URL_BASE}/api/users/logout`);
+  fetch(`/api/users/logout`);
 
   if (dashboard) {
     removeDashboard();
   }
   localStorage.clear();
   showFormLogin();
+  document.querySelector(".hero").style.display = "flex";
 }
 
 function loadTweets() {
@@ -219,7 +219,19 @@ function createUser() {
 
   fetch(`/api/users/`, options)
     .then((res) => res.json())
-    .then((json) => console.log(json));
+    .then((json) => {
+      if (json.message === "ok") {
+        Notiflix.Notify.Success("User created successfully!");
+        document.getElementById("txt_name").value = "";
+        document.getElementById("txt_username").value = "";
+        document.getElementById("txt_email").value = "";
+        document.getElementById("txt_password").value = "";
+        document.getElementById("txt_password-confirmation").value = "";
+      } else {
+        Notiflix.Notify.Failure("Error: User could not be created.");
+      }
+    })
+    .catch((err) => {});
 }
 
 function createTweet() {
@@ -245,12 +257,12 @@ function createTweet() {
     .then((res) => res.json())
     .then((json) => {
       // eslint-disable-next-line no-undef
-      Notiflix.Notify.Success("Tweet creado corrrectamente");
+      Notiflix.Notify.Success("Tweet created successfully!");
       loadTweets();
     })
     .catch((err) => {
       // eslint-disable-next-line no-undef
-      Notiflix.Notify.Failure("Error al intentar crear el Tweet");
+      Notiflix.Notify.Failure("Error: Tweet creation failed.");
     });
 }
 

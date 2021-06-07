@@ -39,7 +39,7 @@ const create = async (req, res) => {
   if (userFound.length > 0) {
     res
       .status(500)
-      .json({ message: locale.translate("errors.user.userExist") });
+      .json({ message: locale.translate("errors.user.userExists") });
     return;
   }
 
@@ -54,7 +54,7 @@ const create = async (req, res) => {
   const newUser = new User(user);
   newUser.save().then((userCreated) => {
     newAccount(user.email);
-    res.status(200).json(userCreated);
+    res.status(200).json({ userCreated, message: "ok" });
   });
 };
 
@@ -83,7 +83,7 @@ const login = async (req, res) => {
           message: "ok",
         });
     } else {
-      res.json({ message: locale.translate("errors.user.userNotExists") });
+      res.json({ message: locale.translate("errors.user.userDataInvalid") });
     }
   } else {
     res.json({ message: locale.translate("errors.user.userNotExists") });

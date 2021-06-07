@@ -10,49 +10,43 @@
       type="image/x-icon"
     />
     <title>Twitter</title>
-    <!-- normalize css -->
-    <link rel="stylesheet" href="assets/css/normalize-8.0.1.css" />
-    <!-- google fonts -->
+    <link rel="stylesheet" href="./assets/css/normalize-8.0.1.css" />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="assets/css/notiflix-2.7.0.min.css" />
-    <!-- main styles -->
-    <link rel="stylesheet" href="assets/css/styles.css" />
+    <link rel="stylesheet" href="./assets/css/notiflix-2.7.0.min.css" />
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <base href="/" />
   </head>
   <body>
-    <!-- header -->
     <header class="header">
-      <!-- nav -->
       <nav class="nav">
         <div class="wrapper">
           <div class="logo">
             <img
               class="logo__img"
-              src="assets/images/logo-white.svg"
+              src="/assets/images/logo-white.svg"
               alt="Logo de Twitter"
             />
           </div>
         </div>
       </nav>
-      <!-- /nav -->
     </header>
-    <!-- /header -->
 
-    <!-- main -->
     <main class="main">
       <div class="wrapper">
         <div id="app"></div>
       </div>
+      <div class="hero">
+        <img src="/assets/images/logo-white.svg" alt="" />
+      </div>
     </main>
-    <!-- /main -->
 
-    <!-- template-login -->
     <template id="template-login">
       <div class="form">
-        <h1 class="form__h1">Iniciar sesión en Twitter</h1>
+        <h1 class="form__h1">Log in to Twitter</h1>
         <p class="form__message display-none"></p>
         <div class="mb-1">
           <form id="form-login" action="#login" method="POST">
@@ -60,36 +54,34 @@
               class="form__input"
               type="text"
               name="username"
-              placeholder="Usuario"
+              placeholder="Username"
               required
             />
             <input
               class="form__input"
               type="password"
               name="password"
-              placeholder="Contraseña"
+              placeholder="Password"
               required
             />
             <input
               class="form__input form__input--primary"
               type="submit"
-              value="Login"
+              value="Log in"
             />
           </form>
         </div>
         <p class="text-center">
-          <a id="form-link-register" href="#register" class="form__link"
-            >Regístrate en Twitter</a
-          >
+          <a id="form-link-register" href="#register" class="form__link">
+            Sign up for Twitter
+          </a>
         </p>
       </div>
     </template>
-    <!-- /template-login -->
 
-    <!-- template-signup -->
     <template id="template-signup">
       <div class="form">
-        <h1 class="header__h1">Crea tu cuenta</h1>
+        <h1 class="header__h1">Create your account</h1>
         <p class="form__message display-none"></p>
         <div class="mb-1">
           <form id="form-register" action="#" method="POST">
@@ -134,26 +126,24 @@
             />
             <input
               type="submit"
-              value="Create user"
+              value="Sign up"
               class="form__input form__input--primary"
             />
           </form>
         </div>
         <p class="text-center">
           <a id="form-link-login" href="#login" class="form__link"
-            >Iniciar sesión</a
+            >Log in to Twitter</a
           >
         </p>
       </div>
     </template>
-    <!-- /template-signup -->
 
-    <!-- template-home -->
     <template id="template-home">
       <div class="home">
         <div class="home__header">
           <p class="home__p">Welcome @<span class="home__span"></span></p>
-          <a id="logout" class="home__link" href="#logout">Logout</a>
+          <a id="logout" class="home__link" href="#logout">Log out</a>
         </div>
         <hr />
         <div class="form-tweet">
@@ -181,14 +171,12 @@
         </section>
       </div>
     </template>
-    <!-- /template-home -->
 
-    <!-- template-tweets -->
     <template id="template-tweets">
       <article class="tweets-article">
         <div class="tweets-article__div">
           <img
-            src="assets/images/avatar-men.jpg"
+            src="assets/images/avatar.png"
             alt="Avatar"
             class="tweets-article__img"
           />
@@ -200,23 +188,22 @@
           </div>
         </div>
         <div class="glyphicon">
-          <a href="#comment"
+          <a href="#comment" class="comment"
             ><i class="far fa-comment"> <span class="comments">0</span></i></a
           >
-          <a href="#like"
+          <a href="#like" class="like"
             ><i class="far fa-heart"> <span class="likes">0</span></i></a
           >
         </div>
       </article>
     </template>
-    <!-- /template-tweets -->
 
-    <!-- script js -->
     <script
       src="https://kit.fontawesome.com/f2db0bb37e.js"
       crossorigin="anonymous"
     ></script>
-    <script src="assets/js/notiflix-2.7.0.min.js"></script>
-    <script src="assets/js/app.js"></script>
+    <script src="/assets/js/notiflix-2.7.0.min.js"></script>
+
+    <script src="/assets/js/app.js"></script>
   </body>
 </html>
