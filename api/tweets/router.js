@@ -18,7 +18,7 @@ router.use(logger);
 
 router
   .route("/")
-  .get(authenticator, list)
+  .get(list)
   .post(authenticator, validateTweet, create)
   .delete(authenticator, tweetsAuthorization, destroyTweet);
 
