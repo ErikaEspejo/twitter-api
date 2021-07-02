@@ -28,6 +28,25 @@ const list = (req, res) => {
     });
 };
 
+const getTweet = (req, res) => {
+  const { id } = req.params;
+
+  Tweet.findOne({ _id: id }, [
+    "likes",
+    "content",
+    "createdAt",
+    "user",
+    "comments",
+  ])
+    .populate("user", ["name", "username"])
+    .populate("comments.user", ["name", "username"])
+    .then(async (tweet) => {
+      res.status(200).json({
+        data: tweet,
+      });
+    });
+};
+
 const create = (req, res) => {
   const { content, userId } = req.body;
 
@@ -122,4 +141,5 @@ module.exports = {
   likes,
   destroyTweet,
   getExternalTweetsByUsername,
+  getTweet,
 };
