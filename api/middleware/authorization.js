@@ -1,14 +1,14 @@
 const { verifyIfUserIsOwnsTweet } = require("../services/tweetService");
-const { isUserAdmin } = require("../services/userService");
+const { isAdmin } = require("../services/userService");
 const { locale } = require("../../locale");
 
 const usersAuthorization = async (req, res, next) => {
   const id = req.params.id || req.body.id;
   const { userId } = req.body;
 
-  const isAdmin = await isUserAdmin(userId);
+  const isUserAdmin = await isAdmin(userId);
 
-  if (userId === id || isAdmin) {
+  if (userId === id || isUserAdmin) {
     next();
   } else {
     res

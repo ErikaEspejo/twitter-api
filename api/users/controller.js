@@ -7,36 +7,48 @@ const { newAccount } = require("../services/mailerService");
 
 const User = require("./model");
 
+const getOne = async (req, res) => {
+  const { id } = req.params;
+  User.findById(id, [
+    "name",
+    "username",
+    "email",
+    "createdAt",
+    "updatedAt",
+  ]).then(async (user) => {
+    res.status(200).json({
+      data: user,
+    });
+  });
+};
 const list = async (req, res) => {
   const { page = 1, limit = 10 } = req.query;
   const skip = (page - 1) * limit;
 
   User.find({ active: true }, ["name", "username", "createdAt", "updatedAt"])
-    .limit(Number(limit)) // maximma cantidad de elementos por pagina
-    .skip(skip) // saltarse elementos para mostrar lo que se quiere
-    .sort({ createdAt: -1 }) // ordena ascendentemente
+    .limit(Number(limit))
+    .skip(skip)
+    .sort({ createdAt: -1 })
     .then(async (users) => {
-      // promise
       const total = await User.estimatedDocumentCount();
-      const totalPages = Math.round(total / limit);
+      const totalPages = Math.ceil(total / limit);
       const hasMore = page < totalPages;
 
       res.status(200).json({
-        total,
-        currentPage: page,
-        totalPages,
         hasMore,
-        users,
+        totalPages,
+        total,
+        data: users,
+        currentPage: page,
       });
     });
 };
 
 const create = async (req, res) => {
-  const { name, email, username, password, role } = req.body; // Destructuración de las llaves - valor del request
+  const { name, email, username, password } = req.body;
 
-  const userFound = await User.find({ $or: [{ username }, { email }] });
-
-  if (userFound.length > 0) {
+  const findUser = await User.find({ $or: [{ username }, { email }] });
+  if (findUser.length > 0) {
     res
       .status(500)
       .json({ message: locale.translate("errors.user.userExists") });
@@ -48,13 +60,13 @@ const create = async (req, res) => {
     email,
     username,
     password,
-    role,
   };
 
   const newUser = new User(user);
   newUser.save().then((userCreated) => {
     newAccount(user.email);
-    res.status(200).json({ userCreated, message: "ok" });
+
+    res.status(200).json(userCreated);
   });
 };
 
@@ -68,22 +80,25 @@ const login = async (req, res) => {
     const result = await bcrypt.compare(password, foundUser.password);
     if (result) {
       const token = jwt.sign({ userId }, config.jwtKey);
+      const cookieProps = {
+        maxAge: 60 * 60 * 24 * 1000,
+        httpOnly: true,
+      };
+
       res
         .status(200)
-        .cookie("token", token, {
-          maxAge: 60 * 60 * 24 * 10000,
-          httpOnly: true,
-        })
+        .cookie("token", token, cookieProps)
         .json({
           data: {
+            id: userId,
             username: foundUser.username,
             name: foundUser.name,
-            token,
+            token: token,
           },
           message: "ok",
         });
     } else {
-      res.json({ message: locale.translate("errors.user.userDataInvalid") });
+      res.json({ message: locale.translate("errors.user.userNotExists") });
     }
   } else {
     res.json({ message: locale.translate("errors.user.userNotExists") });
@@ -96,22 +111,23 @@ const remove = async (req, res) => {
   await User.findOneAndDelete({ _id: { $eq: id } }, (err, docs) => {
     if (err) {
       res.status(500).json({
-        message: locale.translate("errors.user.onDelete"),
+        message: `${locale.translate("errors.user.onDelete")}`,
       });
     } else if (docs) {
-      res
-        .status(200)
-        .json({ message: locale.translate("success.user.onDelete") });
+      res.status(200).json({
+        message: `${locale.translate("success.user.onDelete")}`,
+        id: docs._id,
+      });
     } else {
-      res
-        .status(200)
-        .json({ message: locale.translate("success.user.onDelete") });
+      res.status(404).json({
+        message: `${locale.translate("errors.user.userNotExists")}`,
+      });
     }
   });
 };
 
 const update = async (req, res) => {
-  const { id } = req.params;
+  const id = req.params.id;
   const { name, email, username, password } = req.body;
 
   if (name && email && username && password) {
@@ -126,7 +142,6 @@ const update = async (req, res) => {
 
     if (userFind) {
       const userUpdated = await User.updateOne(
-        // eslint-disable-next-line no-underscore-dangle
         { _id: userFind._id },
         {
           $set: { name: user.name, email: user.email, password: user.password },
@@ -157,6 +172,7 @@ const logout = (req, res) => {
 };
 
 module.exports = {
+  getOne,
   list,
   create,
   update,

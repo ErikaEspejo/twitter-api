@@ -18,9 +18,10 @@ const isAdmin = async (userId) => {
 // Find User By Id
 const findUserById = async (userId) => {
   const userFound = await User.findOne({ _id: userId })
-    .then((user) => user)
+    .then((user) => {
+      return user;
+    })
     .catch((err) => {
-      // eslint-disable-next-line no-console
       console.error(err);
     });
 

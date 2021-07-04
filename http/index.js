@@ -4,7 +4,7 @@ const cors = require("cors");
 const api = require("../api");
 const { config } = require("../config");
 
-const { port, host } = config.http;
+const { host, port } = config.http;
 
 const app = express();
 app.use(cors());
@@ -15,9 +15,7 @@ app.use(express.static("public"));
 
 const init = () => {
   app.listen(port, host, () => {
-    /* eslint-disable no-console */
-    console.log(`Servidor iniciado en ${host}:${port}...`);
-    /* eslint-enable no-console */
+    console.log(`Server running at http://${host}:${port}`);
   });
 };
 
